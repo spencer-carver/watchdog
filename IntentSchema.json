@@ -1,0 +1,40 @@
+{
+    "intents": [
+        {
+            "intent": "SingleLeaveIntent",
+            "slots": [
+                {
+                    "name": "User",
+                    "type": "AMAZON.US_FIRST_NAME"
+                }
+            ]
+        },
+        {
+            "intent": "SingleReturnIntent",
+            "slots": [
+                {
+                    "name": "User",
+                    "type": "AMAZON.US_FIRST_NAME"
+                }
+            ]
+        },
+        {
+            "intent": "AbsenceQueryIntent",
+            "slots": [
+                {
+                    "name": "User",
+                    "type": "AMAZON.US_FIRST_NAME"
+                }
+            ]
+        },
+        {
+            "intent": "AMAZON.HelpIntent"
+        },
+        {
+            "intent": "AMAZON.StopIntent"
+        },
+        {
+            "intent": "AMAZON.CancelIntent"
+        }
+    ]
+}

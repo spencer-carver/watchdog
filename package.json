@@ -1,0 +1,28 @@
+{
+  "name": "watchdog",
+  "version": "1.0.1",
+  "description": "An amazon echo skill for tracking the comings and goings of family members",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -f watchdog.zip && find . | egrep \"\\.(js)$\" | zip -@ watchdog.zip",
+    "deploy": "aws lambda update-function-code --function-name WatchDog --zip-file fileb://watchdog.zip"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spencer-carver/watchdog.git"
+  },
+  "keywords": [
+    "alexa",
+    "echo",
+    "watchdog"
+  ],
+  "author": "Spencer Carver",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spencer-carver/watchdog/issues"
+  },
+  "homepage": "https://github.com/spencer-carver/watchdog#readme",
+  "dependencies": {
+    "aws-sdk": "^2.503.0"
+  }
+}
