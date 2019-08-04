@@ -7,14 +7,30 @@
  * http://amzn.to/1LGWsLG
  */
 
-const singleLeavingReply = require("./commands/leaving");
-const singleReturnReply = require("./commands/returning");
-const queryReply = require("./commands/queryOne");
-const Reply = require("./reply");
+const leaving = require("./commands/leaving");
+const returning = require("./commands/returning");
+const queryOne = require("./commands/queryOne");
+const welcome = require("./commands/welcome");
+const help = require("./commands/help");
+const stop = require("./commands/stop");
+const cancel = require("./commands/cancel");
+
+const INTENTS = {
+    "SingleLeaveIntent": leaving,
+    "SingleReturnIntent": returning,
+    "AbsenceQueryIntent": queryOne,
+    "AMAZON.HelpIntent": help,
+    "AMAZON.StopIntent": stop,
+    "AMAZON.CancelIntent": cancel
+};
+
+function unknownIntentHandler() {
+    throw new Error("Invalid Intent");
+}
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
-exports.handler = function (event, context) {
+exports.handler = async function (event, context) {
     try {
         console.log("event.session.application.applicationId=" + event.session.application.applicationId);
 
@@ -28,131 +44,38 @@ exports.handler = function (event, context) {
         }
         */
 
+        // Called when the session starts.
         if (event.session.new) {
-            onSessionStarted({requestId: event.request.requestId}, event.session);
+            console.log("onSessionStarted requestId=" + event.request.requestId + ", sessionId=" + event.session.sessionId);
         }
 
+        // Called when the user launches the skill without specifying what they want.
         if (event.request.type === "LaunchRequest") {
-            onLaunch(event.request,
-                event.session,
-                function callback(sessionAttributes, speechletResponse) {
-                    context.succeed(Reply.buildResponse(sessionAttributes, speechletResponse));
-                });
-        } else if (event.request.type === "IntentRequest") {
-            onIntent(event.request,
-                event.session,
-                function callback(sessionAttributes, speechletResponse) {
-                    context.succeed(Reply.buildResponse(sessionAttributes, speechletResponse));
-                });
-        } else if (event.request.type === "SessionEndedRequest") {
-            onSessionEnded(event.request, event.session);
-            context.succeed();
+            console.log("onLaunch requestId=" + event.request.requestId + ", sessionId=" + event.session.sessionId);
+
+            return context.succeed(await welcome());
         }
+
+        // Called when the user ends the session. Is not called when the skill return shouldEndSession=true
+        if (event.request.type === "SessionEndedRequest") {
+            console.log("onSessionEnded requestId=" + event.request.requestId + ", sessionId=" + event.session.sessionId);
+
+            // Add cleanup logic here
+
+            return context.succeed();
+        }
+
+        if (event.request.type !== "IntentRequest") {
+            return;
+        }
+
+        // Called when the user specifies an intent for this skill.
+        console.log("onIntent requestId=" + event.request.requestId + ", sessionId=" + event.session.sessionId);
+
+        const intentHandler = INTENTS[event.request.intent.name] || unknownIntentHandler;
+
+        context.succeed(await intentHandler(event.request.intent, event.session));
     } catch (e) {
         context.fail("Exception: " + e);
     }
 };
-
-/**
- * Called when the session starts.
- */
-function onSessionStarted(sessionStartedRequest, session) {
-    console.log("onSessionStarted requestId=" + sessionStartedRequest.requestId +
-        ", sessionId=" + session.sessionId);
-}
-
-/**
- * Called when the user launches the skill without specifying what they want.
- */
-function onLaunch(launchRequest, session, callback) {
-    console.log("onLaunch requestId=" + launchRequest.requestId +
-        ", sessionId=" + session.sessionId);
-
-    // Dispatch to your skill's launch.
-    getWelcomeResponse(callback);
-}
-
-/**
- * Called when the user specifies an intent for this skill.
- */
-function onIntent(intentRequest, session, callback) {
-    console.log("onIntent requestId=" + intentRequest.requestId +
-        ", sessionId=" + session.sessionId);
-
-    const intent = intentRequest.intent,
-        intentName = intentRequest.intent.name;
-
-    // Dispatch to your skill's intent handlers
-    if ("SingleLeaveIntent" === intentName) {
-        singleLeavingReply(intent, session, callback);
-    } else if ("SingleReturnIntent" === intentName) {
-        singleReturnReply(intent, session, callback);
-    } else if ("AbsenceQueryIntent" === intentName) {
-        queryReply(intent, session, callback);
-    } else if ("AMAZON.HelpIntent" === intentName) {
-        getHelpResponse(callback);
-    } else if ("AMAZON.StopIntent" === intentName) {
-        getStopResponse(callback);
-    } else if ("AMAZON.CancelIntent" === intentName) {
-        getCancelResponse(callback);
-    } else {
-        throw "Invalid intent";
-    }
-}
-
-/**
- * Called when the user ends the session.
- * Is not called when the skill returns shouldEndSession=true.
- */
-function onSessionEnded(sessionEndedRequest, session) {
-    console.log("onSessionEnded requestId=" + sessionEndedRequest.requestId +
-        ", sessionId=" + session.sessionId);
-    // Add cleanup logic here
-}
-
-// --------------- Functions that control the skill's behavior -----------------------
-
-function getStopResponse(callback) {
-    const cardTitle = "Stop";
-    const speechOutput = "Goodbye.";
-    const repromptText = "";
-    const shouldEndSession = true;
-    callback({}, Reply.buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-}
-
-function getCancelResponse(callback) {
-    const cardTitle = "Cancel";
-    const speechOutput = "Watchdog command cancelled. Exiting.";
-    const repromptText = "";
-    const shouldEndSession = true;
-    callback({}, Reply.buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-}
-
-function getWelcomeResponse(callback) {
-    // If we wanted to initialize the session to have some attributes we could add those here.
-    const sessionAttributes = {};
-    const cardTitle = "Welcome to Watchdog";
-    const speechOutput = "Watchdog is a tool to help you track how long you've been away. " +
-        "You can also ask how long it has been since someone else left. " +
-        "For sample commands, say 'help'. Otherwise, try issuing a command now.";
-    const repromptText = "For sample commands, say 'help'. Otherwise, try issuing a command now.";
-    const shouldEndSession = false;
-
-    callback(sessionAttributes,
-        Reply.buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-}
-
-function getHelpResponse(callback) {
-    // If we wanted to initialize the session to have some attributes we could add those here.
-    const sessionAttributes = {};
-    const cardTitle = "Watchdog Help";
-    const speechOutput = "Start Watchdog tracking by telling WatchDog 'Someone is leaving'. " +
-        "Finish a session by telling WatchDog 'Someone is back'. " +
-        "You can also check how long tracked people have been away by asking WatchDog " +
-        "'How long has Someone been away'.";
-    const repromptText = "Try issuing WatchDog a command now.";
-    const shouldEndSession = false;
-
-    callback(sessionAttributes,
-        Reply.buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-}
