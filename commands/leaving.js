@@ -1,41 +1,33 @@
-const AWS = require("aws-sdk");
-const dynamo = new AWS.DynamoDB();
-const Reply = require("../reply");
+const db = require("../util/db");
+const buildSpeechletResponse = require("../util/buildSpeechletResponse");
+const { INTENT_ERROR } = require("../util/constants");
 
-function singleLeavingReply(intent, session, callback) {
-    const user = intent.slots.User;
-    const options = {
-        cardTitle: "" + user.value + " is leaving",
-        speechOutput: "",
-        repromptText: "",
+async function leaving(intent, session) {
+    const userId = session.user.userId;
+    const name = intent.slots.User.value;
+    const timestamp = (new Date()).toString();
+
+    try {
+        await db.insertItem(userId, name, timestamp);
+
+        return respond(name, "Have a good day");
+    } catch (error) {
+        console.log("SingleLeaveIntent Error: ", error);
+
+        return respond(name, INTENT_ERROR);
+    }
+}
+
+function respond(name, speechOutput) {
+    return {
         sessionAttributes: {},
-        shouldEndSession: true
+        response: buildSpeechletResponse({
+            cardTitle: `${ name } is leaving`,
+            speechOutput,
+            repromptText: "",
+            shouldEndSession: true
+        })
     };
-
-    personLeaving(options, session, user, callback);
 }
 
-function personLeaving(options, session, user, callback) {
-    //Configure DB query
-    const params = {
-        Item: {
-            "username": {
-                S: session.user.userId + "~" + user.value
-            },
-            "dateTime": {
-                S: (new Date()).toString()
-            }
-        },
-        TableName: "departureTimes"
-    };
-
-    dynamo.putItem(params, function (err, data) {
-        if (err) {
-            Reply.processError(options, callback);
-        } else {
-            Reply.processLeaveData(options, data.Item, callback);
-        }
-    });
-}
-
-module.exports = singleLeavingReply;
+module.exports = leaving;

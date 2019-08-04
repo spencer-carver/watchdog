@@ -1,40 +1,42 @@
-const AWS = require("aws-sdk");
-const dynamo = new AWS.DynamoDB();
-const Reply = require("../reply");
+const db = require("../util/db");
+const buildSpeechletResponse = require("../util/buildSpeechletResponse");
+const timestampFromDataItem = require("../util/timestampFromDataItem");
+const getDifference = require("../util/getDifference");
+const { INTENT_ERROR, MISSING_PREFIX } = require("../util/constants");
 
-function singleQueryReply(intent, session, callback) {
-    const user = intent.slots.User;
-    const options = {
-        cardTitle: "How long has " + user.value + " been away?",
-        speechOutput: "",
-        repromptText: "",
-        sessionAttributes: {},
-        shouldEndSession: true
-    };
+async function queryOne(intent, session, callback) {
+    const userId = session.user.userId;
+    const name = intent.slots.User.value;
 
-    queryPersonStatus(options, session, user, callback);
-}
+    try {
+        const dataItem = await db.queryItem(userId, name);
 
-function queryPersonStatus(options, session, user, callback) {
-    //Configure DB Query
-    const params = {
-        Key: {
-            "username": {
-                S: session.user.userId + "~" + user.value
-            }
-        },
-        TableName: "departureTimes"
-    };
-
-    dynamo.getItem(params, function (err, data) {
-        if (err) {
-            Reply.processError(options, callback);
-        } else if (data.Item === undefined) {
-            Reply.processEmptyResponse(options, user.value, callback);
-        } else {
-            Reply.processQueryData(options, user.value, data.Item, callback);
+        if (!dataItem) {
+            return respond(name, `${ MISSING_PREFIX }${ name }`)
         }
-    });
+
+        const departureTime = new Date(timestampFromDataItem(dataItem));
+        const returnTime = new Date();
+        const awayTime = getDifference(departureTime, returnTime);
+
+        return respond(name, `My records indicate that ${ name } has been gone for ${ awayTime }.`);
+    } catch (error) {
+        console.log("AbsenceQueryIntent Error: ", error);
+
+        return respond(name, INTENT_ERROR);
+    }
 }
 
-module.exports = singleQueryReply;
+function respond(name, speechOutput) {
+    return {
+        sessionAttributes: {},
+        response: buildSpeechletResponse({
+            cardTitle: `How long has ${ name } been away?`,
+            speechOutput,
+            repromptText: "",
+            shouldEndSession: true
+        })
+    };
+}
+
+module.exports = queryOne;
