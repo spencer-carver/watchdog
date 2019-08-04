@@ -4,6 +4,11 @@ This application stores a name associated with a user from the list of names ava
 
 This information is stored in a dynamoDB table used only for this application, and the entries are removed when the user indicates they have returned. Entries are stored for the sole purpose of being queriable  while they are gone and upon return.
 
+# v1.0.2 - 2019-08-03
+
+* Refactored code again (now async/await instead of callbacks)
+* Connected new DynamoDB table (db helper is backwards-compatible with old table)
+
 # v1.0.1 - 2019-08-01
 
 * Refactored code (no functionality changes) in preparation for renewed development
