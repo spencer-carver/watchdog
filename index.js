@@ -36,11 +36,9 @@ exports.handler = async function (event, context) {
          * Uncomment this if statement and populate with your skill's application ID to
          * prevent someone else from configuring a skill that sends requests to this function.
          */
-        /*
-        if (event.session.application.applicationId !== "amzn1.echo-sdk-ams.app.[unique-value-here]") {
-             context.fail("Invalid Application ID");
+        if (event.session.application.applicationId !== "amzn1.echo-sdk-ams.app.c1bb0a28-f820-47fb-b02d-822e5fa27af0") {
+            context.fail("Invalid Application ID");
         }
-        */
 
         // Called when the session starts.
         if (event.session.new) {
