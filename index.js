@@ -1,10 +1,6 @@
 /**
- * This sample demonstrates a simple skill built with the Amazon Alexa Skills Kit.
- * The Intent Schema, Custom Slots, and Sample Utterances for this skill, as well as
- * testing instructions are located at http://amzn.to/1LzFrj6
- *
- * For additional samples, visit the Alexa Skills Kit Getting Started guide at
- * http://amzn.to/1LGWsLG
+ * This is the sole entrypoint for the watchdog Alexa Skill.
+ * Each valid command is partitioned to it's own file, and mapped to the call by the intent name
  */
 
 const leaving = require("./commands/leaving");
@@ -30,8 +26,8 @@ function unknownIntentHandler() {
     throw new Error("Invalid Intent");
 }
 
-// Route the incoming request based on type (LaunchRequest, IntentRequest,
-// etc.) The JSON body of the request is provided in the event parameter.
+// Route the incoming request based on type (LaunchRequest, IntentRequest, etc.)
+// The JSON body of the request is provided in the event parameter.
 exports.handler = async function (event, context) {
     try {
         console.log("event.session.application.applicationId=" + event.session.application.applicationId);
