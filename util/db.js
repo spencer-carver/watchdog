@@ -89,6 +89,26 @@ async function queryItemWithParams(params) {
     });
 }
 
+async function queryItems(userId) {
+    const params = {
+        ExpressionAttributeValues: {
+            ":partitionkeyval": { S: userId }
+        },
+        KeyConditionExpression: "echoDeviceId = :partitionkeyval",
+        TableName: CURRENT_DATABASE.tableName
+    };
+
+    return new Promise(function(resolve, reject) {
+        dynamo.query(params, function(err, data) {
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(data.Items);
+        });
+    });
+}
+
 // function updateItem() { }
 
 async function deleteItem(userId, name) {
@@ -122,6 +142,7 @@ async function deleteItemWithParams(params) {
 module.exports = {
     insertItem,
     queryItem,
+    queryItems,
     /* updateItem, */
     deleteItem
 };

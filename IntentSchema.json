@@ -28,6 +28,9 @@
             ]
         },
         {
+            "intent": "MultiQueryIntent"
+        },
+        {
             "intent": "AMAZON.HelpIntent"
         },
         {

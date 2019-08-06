@@ -4,7 +4,7 @@ const timestampFromDataItem = require("../util/timestampFromDataItem");
 const getDifference = require("../util/getDifference");
 const { INTENT_ERROR, MISSING_PREFIX } = require("../util/constants");
 
-async function returning(intent, session, callback) {
+async function returning(intent, session) {
     const userId = session.user.userId;
     const name = intent.slots.User.value;
 

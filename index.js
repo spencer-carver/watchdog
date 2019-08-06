@@ -10,6 +10,7 @@
 const leaving = require("./commands/leaving");
 const returning = require("./commands/returning");
 const queryOne = require("./commands/queryOne");
+const queryAll = require("./commands/queryAll");
 const welcome = require("./commands/welcome");
 const help = require("./commands/help");
 const stop = require("./commands/stop");
@@ -19,6 +20,7 @@ const INTENTS = {
     "SingleLeaveIntent": leaving,
     "SingleReturnIntent": returning,
     "AbsenceQueryIntent": queryOne,
+    "MultiQueryIntent": queryAll,
     "AMAZON.HelpIntent": help,
     "AMAZON.StopIntent": stop,
     "AMAZON.CancelIntent": cancel
