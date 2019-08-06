@@ -1,43 +1,183 @@
 {
-    "intents": [
-        {
-            "intent": "SingleLeaveIntent",
-            "slots": [
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "watch dog",
+            "intents": [
                 {
-                    "name": "User",
-                    "type": "AMAZON.FirstName"
-                }
-            ]
-        },
-        {
-            "intent": "SingleReturnIntent",
-            "slots": [
+                    "name": "SingleLeaveIntent",
+                    "slots": [
+                        {
+                            "name": "User",
+                            "type": "AMAZON.FirstName",
+                            "samples": [
+                                "{User} is",
+                                "{User}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "{User} is leaving",
+                        "{User} is leaving now",
+                        "{User} is heading out",
+                        "{User} is leaving for work",
+                        "{User} is heading to work",
+                        "{User} is off for the day",
+                        "{User} is heading out for the day"
+                    ]
+                },
                 {
-                    "name": "User",
-                    "type": "AMAZON.FirstName"
-                }
-            ]
-        },
-        {
-            "intent": "AbsenceQueryIntent",
-            "slots": [
+                    "name": "SingleReturnIntent",
+                    "slots": [
+                        {
+                            "name": "User",
+                            "type": "AMAZON.FirstName",
+                            "samples": [
+                                "{User} is",
+                                "{User}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "{User} has returned",
+                        "{User} is back",
+                        "{User} is home"
+                    ]
+                },
                 {
-                    "name": "User",
-                    "type": "AMAZON.FirstName"
+                    "name": "AbsenceQueryIntent",
+                    "slots": [
+                        {
+                            "name": "User",
+                            "type": "AMAZON.FirstName",
+                            "samples": [
+                                "{User}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "How long has {User} been gone",
+                        "How long {User} has been gone",
+                        "How long has {User} been away",
+                        "How long {User} has been away",
+                        "{User}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": [
+                        "help"
+                    ]
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": [
+                        "stop"
+                    ]
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": [
+                        "cancel"
+                    ]
+                },
+                {
+                    "name": "MultiQueryIntent",
+                    "slots": [],
+                    "samples": [
+                        "who is gone",
+                        "who isn't home",
+                        "who is out",
+                        "Who is away"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
                 }
-            ]
+            ],
+            "types": []
         },
-        {
-            "intent": "MultiQueryIntent"
+        "dialog": {
+            "intents": [
+                {
+                    "name": "AbsenceQueryIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "User",
+                            "type": "AMAZON.FirstName",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.31557219947.689747549504"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SingleReturnIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "User",
+                            "type": "AMAZON.FirstName",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.295339814070.103144606538"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SingleLeaveIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "User",
+                            "type": "AMAZON.FirstName",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.713283166120.1199046381224"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
         },
-        {
-            "intent": "AMAZON.HelpIntent"
-        },
-        {
-            "intent": "AMAZON.StopIntent"
-        },
-        {
-            "intent": "AMAZON.CancelIntent"
-        }
-    ]
+        "prompts": [
+            {
+                "id": "Elicit.Slot.31557219947.689747549504",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "who am I looking for?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.295339814070.103144606538",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Who is returning?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.713283166120.1199046381224",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Who is leaving?"
+                    }
+                ]
+            }
+        ]
+    }
 }
