@@ -1,13 +1,13 @@
-function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
+function buildSpeechletResponse({ cardTitle, speechOutput, repromptText, shouldEndSession }) {
     return {
         outputSpeech: {
             type: "PlainText",
-            text: output
+            text: speechOutput
         },
         card: {
             type: "Simple",
-            title: title,
-            content: output
+            title: cardTitle,
+            content: speechOutput
         },
         reprompt: {
             outputSpeech: {
