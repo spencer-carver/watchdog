@@ -3,6 +3,7 @@
 # v1.1.0 - 2019-08-05
 
 * added `queryAll` command code, sample utterances, and intent schema entry
+* changed from AMAZON.US_FIRST_NAME to AMAZON.FirstName to try and improve detection
 
 # v1.0.2 - 2019-08-03
 

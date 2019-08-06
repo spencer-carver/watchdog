@@ -5,7 +5,7 @@
             "slots": [
                 {
                     "name": "User",
-                    "type": "AMAZON.US_FIRST_NAME"
+                    "type": "AMAZON.FirstName"
                 }
             ]
         },
@@ -14,7 +14,7 @@
             "slots": [
                 {
                     "name": "User",
-                    "type": "AMAZON.US_FIRST_NAME"
+                    "type": "AMAZON.FirstName"
                 }
             ]
         },
@@ -23,7 +23,7 @@
             "slots": [
                 {
                     "name": "User",
-                    "type": "AMAZON.US_FIRST_NAME"
+                    "type": "AMAZON.FirstName"
                 }
             ]
         },
