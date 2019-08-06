@@ -1,5 +1,10 @@
 ## Changelog
 
+# v1.1.1 - 2019-08-06
+
+* fix response builder input paramters to correct echo response
+* re-submit update
+
 # v1.1.0 - 2019-08-05
 
 * added `queryAll` command code, sample utterances, and intent schema entry
