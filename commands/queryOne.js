@@ -4,7 +4,7 @@ const timestampFromDataItem = require("../util/timestampFromDataItem");
 const getDifference = require("../util/getDifference");
 const { INTENT_ERROR, MISSING_PREFIX } = require("../util/constants");
 
-async function queryOne(intent, session, callback) {
+async function queryOne(intent, session) {
     const userId = session.user.userId;
     const name = intent.slots.User.value;
 
@@ -12,7 +12,7 @@ async function queryOne(intent, session, callback) {
         const dataItem = await db.queryItem(userId, name);
 
         if (!dataItem) {
-            return respond(name, `${ MISSING_PREFIX }${ name }`)
+            return respond(name, `${ MISSING_PREFIX }${ name }`);
         }
 
         const departureTime = new Date(timestampFromDataItem(dataItem));

@@ -13,3 +13,10 @@ AbsenceQueryIntent How long {User} has been gone
 AbsenceQueryIntent How long has {User} been away
 AbsenceQueryIntent How long {User} has been away
 AbsenceQueryIntent {User}
+MultiQueryIntent Who is away
+MultiQueryIntent Who is gone
+MultiQueryIntent Who are gone
+MultiQueryIntent Who isn't home
+MultiQueryIntent Who aren't home
+MultiQueryIntent Who is out
+MultiQueryIntent Who are out
