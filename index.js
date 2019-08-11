@@ -3,6 +3,7 @@
  * Each valid command is partitioned to it's own file, and mapped to the call by the intent name
  */
 
+ const enforceAuth = require("./enforceAuth");
 const leaving = require("./commands/leaving");
 const returning = require("./commands/returning");
 const queryOne = require("./commands/queryOne");
@@ -30,15 +31,7 @@ function unknownIntentHandler() {
 // The JSON body of the request is provided in the event parameter.
 exports.handler = async function (event, context) {
     try {
-        console.log("event.session.application.applicationId=" + event.session.application.applicationId);
-
-        /**
-         * Uncomment this if statement and populate with your skill's application ID to
-         * prevent someone else from configuring a skill that sends requests to this function.
-         */
-        if (event.session.application.applicationId !== "amzn1.echo-sdk-ams.app.c1bb0a28-f820-47fb-b02d-822e5fa27af0") {
-            context.fail("Invalid Application ID");
-        }
+        enforceAuth(event, context); // security through obscurity
 
         // Called when the session starts.
         if (event.session.new) {
