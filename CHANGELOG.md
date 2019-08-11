@@ -1,5 +1,8 @@
 ## Changelog
 
+# v1.1.2 - 2019-08-11
+* additional security checks for incoming requests
+
 # v1.1.1 - 2019-08-06
 
 * fix response builder input paramters to correct echo response

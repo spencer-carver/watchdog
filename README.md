@@ -7,10 +7,13 @@ This information is stored in a dynamoDB table used only for this application, a
 
 ## Latest Updates
 
+# v1.1.2 - 2019-08-11
+* additional security checks for incoming requests
+
 # v1.1.1 - 2019-08-06
 
 * fix response builder input paramters to correct echo response
-* re-submit update
+* re-submit update (Approved)
 
 # v1.1.0 - 2019-08-05
 
