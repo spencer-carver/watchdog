@@ -7,6 +7,9 @@ This information is stored in a dynamoDB table used only for this application, a
 
 ## Latest Updates
 
+# v1.1.3 - 2026-04-03
+* dependency upgrades (aws runtime -> v3, node -> 24)
+
 # v1.1.2 - 2019-08-11
 * additional security checks for incoming requests
 

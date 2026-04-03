@@ -42,7 +42,7 @@ exports.handler = async function (event, context) {
         if (event.request.type === "LaunchRequest") {
             console.log("onLaunch requestId=" + event.request.requestId + ", sessionId=" + event.session.sessionId);
 
-            return context.succeed(await welcome());
+            return welcome();
         }
 
         // Called when the user ends the session. Is not called when the skill return shouldEndSession=true
@@ -51,7 +51,7 @@ exports.handler = async function (event, context) {
 
             // Add cleanup logic here
 
-            return context.succeed();
+            return {};
         }
 
         if (event.request.type !== "IntentRequest") {
@@ -63,8 +63,8 @@ exports.handler = async function (event, context) {
 
         const intentHandler = INTENTS[event.request.intent.name] || unknownIntentHandler;
 
-        context.succeed(await intentHandler(event.request.intent, event.session));
+        return await intentHandler(event.request.intent, event.session);
     } catch (e) {
-        context.fail("Exception: " + e);
+        throw new Error("Exception: " + e);
     }
 };

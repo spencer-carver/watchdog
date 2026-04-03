@@ -1,5 +1,11 @@
-const AWS = require("aws-sdk");
-const dynamo = new AWS.DynamoDB();
+const {
+    DynamoDBClient,
+    PutItemCommand,
+    GetItemCommand,
+    QueryCommand,
+    DeleteItemCommand
+} = require("@aws-sdk/client-dynamodb");
+const dynamo = new DynamoDBClient({});
 
 const ORIGINAL_DATABASE = {
     tableName: "departureTimes",
@@ -50,15 +56,8 @@ function generateCurrentParams(userId, name, timestamp) {
 }
 
 async function insertItem(userId, name, timestamp) {
-    return new Promise(function(resolve, reject) {
-        dynamo.putItem(generateCurrentParams(userId, name, timestamp), function (err, data) {
-            if (err) {
-                return reject(err);
-            }
-    
-            return resolve(data.Item);
-        });
-    });
+    const result = await dynamo.send(new PutItemCommand(generateCurrentParams(userId, name, timestamp)));
+    return result.Item;
 }
 
 async function queryItem(userId, name) {
@@ -78,15 +77,8 @@ async function queryItem(userId, name) {
 }
 
 async function queryItemWithParams(params) {
-    return new Promise(function(resolve, reject) {
-        dynamo.getItem(params, function (err, data) {
-            if (err) {
-                return reject(err);
-            }
-
-            return resolve(data.Item);
-        });
-    });
+    const result = await dynamo.send(new GetItemCommand(params));
+    return result.Item;
 }
 
 async function queryItems(userId) {
@@ -98,15 +90,8 @@ async function queryItems(userId) {
         TableName: CURRENT_DATABASE.tableName
     };
 
-    return new Promise(function(resolve, reject) {
-        dynamo.query(params, function(err, data) {
-            if (err) {
-                return reject(err);
-            }
-
-            return resolve(data.Items);
-        });
-    });
+    const result = await dynamo.send(new QueryCommand(params));
+    return result.Items;
 }
 
 // function updateItem() { }
@@ -128,15 +113,8 @@ async function deleteItem(userId, name) {
 }
 
 async function deleteItemWithParams(params) {
-    return new Promise(function(resolve, reject) {
-        dynamo.deleteItem(params, function (err, data) {
-            if (err) {
-                return reject(err);
-            }
-
-            return resolve(data.Item);
-        });
-    });
+    const result = await dynamo.send(new DeleteItemCommand(params));
+    return result.Item;
 }
 
 module.exports = {
