@@ -4,7 +4,7 @@
   "description": "An amazon echo skill for tracking the comings and goings of family members",
   "main": "index.js",
   "scripts": {
-    "build": "rm -f watchdog.zip && find . | egrep \"\\.(js)$\" | zip -@ watchdog.zip",
+    "build": "rm -f watchdog.zip && zip -r watchdog.zip . -x '*.git*' 'watchdog.zip' '*.md'",
     "deploy": "aws lambda update-function-code --function-name WatchDog --zip-file fileb://watchdog.zip"
   },
   "repository": {
